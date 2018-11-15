@@ -28,6 +28,9 @@ class TitleScreen extends React.Component {
 
           <Cloud style={{ left: 20, top: 35 }} />
           <Cloud style={{ right: 20, top: 65 }} />
+          <Mountain />
+          <RabbitTitle />
+          <BearTitle />
 
           <View style={styles.title}>
             <Text style={styles.titleText}>
@@ -37,10 +40,6 @@ class TitleScreen extends React.Component {
               タイピング教室
             </Text>
           </View>
-
-          <Mountain />
-          <RabbitTitle />
-          <BearTitle />
 
         </View>
 

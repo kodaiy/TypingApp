@@ -25,6 +25,9 @@ class LevelSelectScreen extends React.Component {
 
           <Cloud style={{ left: 20, top: 35 }} />
           <Cloud style={{ right: 20, top: 65 }} />
+          <Mountain />
+          <RabbitTitle />
+          <BearTitle />
 
           <View style={styles.levelArea}>
             <RectButton
@@ -57,10 +60,6 @@ class LevelSelectScreen extends React.Component {
               上級
             </RectButton>
           </View>
-
-          <Mountain />
-          <RabbitTitle />
-          <BearTitle />
 
         </View>
 

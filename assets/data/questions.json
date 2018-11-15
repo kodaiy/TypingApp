@@ -1,0 +1,24 @@
+{
+  "question_list": [
+    {
+      "level": "elementary",
+      "question_kanji": "徳川家康",
+      "question_hiragana": "とくがわいえやす"
+    },
+    {
+      "level": "elementary",
+      "question_kanji": "織田信長",
+      "question_hiragana": "のだのぶなが"
+    },
+    {
+      "level":"intermediate",
+      "question_kanji":"徳川家康は関ヶ原の戦いで勝利した",
+      "question_hiragana":"とくがわいえやすはせきがはらのたたかいでしょうりした"
+    },
+    {
+      "level":"advanced",
+      "question_kanji":"徳川家康は関ヶ原の戦いで勝利し、その後江戸幕府を開いた",
+      "question_hiragana":"とくがわいえやすはせきがはらのたたかいでしょうりし、そのごえどばくふをひらいた"
+    }
+  ]
+}
