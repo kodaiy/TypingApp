@@ -14,8 +14,6 @@ import BannerAd from '../components/BannerAd';
 class LevelSelectScreen extends React.Component {
   pressLevel(level) {
     this.props.navigation.navigate('Game', { level });
-    console.log('test', level);
-    // this.props.navigation.navigate('Game');
   }
 
   render() {

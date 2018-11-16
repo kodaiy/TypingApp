@@ -22,7 +22,9 @@ class GameScreen extends React.Component {
       restTime: 3000,
       questionKanji: '',
       questionHiragana: '',
+      correctAnswer: '',
       answer: '',
+      pointer: 0,
     };
 
     this.level = this.props.navigation.state.params.level;
@@ -34,7 +36,7 @@ class GameScreen extends React.Component {
       this,
       'test',
       () => {
-        this.setState({ restTime: this.state.restTime - 1 });
+        this.setState(prevState => ({ restTime: prevState.restTime - 1 }));
         if (this.state.restTime === 0) {
           this.props.navigation.navigate('Result');
         }
@@ -50,19 +52,50 @@ class GameScreen extends React.Component {
   }
 
   setQuestion() {
+    const questionNo = Math.floor(Math.random() * this.questionList.length);
     this.setState({
-      questionKanji: this.questionList[0].question_kanji,
-      questionHiragana: this.questionList[0].question_hiragana,
+      questionKanji: this.questionList[questionNo].question_kanji,
+      questionHiragana: this.questionList[questionNo].question_hiragana,
     });
   }
 
-  inputAnswer(answer) {
+  inputAnswer(text) {
+    // 入力文字列から未正解部分を取得
+    const answer = text.slice(this.state.pointer);
+    let revisedPointer = this.state.pointer;
+
+    // 取得文字列をstateのanswerに代入
     this.setState({ answer });
+
+    // 複数文字入力時に先頭から1文字ずつ判定
+    for (let i = 0; i < answer.length; i += 1) {
+      // ひらがなかつ正解文字列と入力文字列が一致する場合（つまり正解の場合）
+      if (answer[0].match((/^[ぁ-ん、。]$/)) && this.state.questionHiragana[this.state.pointer] === answer[0]) {
+        // pointerの移動と、正解文字列をcorrectAnswerへ移し替え
+        // setState直後にstateが更新されないため、一旦別変数に格納
+        revisedPointer += 1;
+        this.setState({ pointer: revisedPointer });
+        this.setState(prevState => ({ correctAnswer: prevState.correctAnswer + answer[0] }));
+        this.setState(prevState => ({ answer: prevState.answer.slice(1) }));
+      } else {
+        // はずれだったら、最初から入力を待つためforを抜ける
+        break;
+      }
+    }
+
+    if (this.state.questionHiragana.length === revisedPointer) {
+      // 最後まで正解文字列を入力し終わったら、次の問題を読み込む
+      this.setQuestion();
+      this.setState({ correctAnswer: '' });
+      this.setState({ pointer: 0 });
+    }
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <BannerAd />
+
         <View style={styles.body}>
           <Cloud style={{ left: 20, top: 35 }} />
           <Cloud style={{ right: 20, top: 65 }} />
@@ -104,9 +137,8 @@ class GameScreen extends React.Component {
                 style={styles.answerText}
                 multiline
                 autoFocus
-                contextMenuHidden={true}
                 onChangeText={text => this.inputAnswer(text)}
-                value={this.state.answer}
+                value={this.state.correctAnswer + this.state.answer}
               />
             </View>
           </View>
@@ -114,7 +146,6 @@ class GameScreen extends React.Component {
 
         <View style={styles.buttonArea}>
         </View>
-        <BannerAd />
       </View>
     );
   }
@@ -182,7 +213,7 @@ const styles = StyleSheet.create({
   },
   buttonArea: {
     backgroundColor: '#7FE21D',
-    flex: 2,
+    flex: 3,
   },
 });
 
