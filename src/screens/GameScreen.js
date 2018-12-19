@@ -4,11 +4,15 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  KeyboardAvoidingView,
+  Animated,
 } from 'react-native';
 
 import QUESTIONS from '../../assets/data/questions.json';
 import Cloud from '../elements/Cloud';
 import Mountain from '../elements/Mountain';
+import I01RabbitIcon from '../elements/I01RabbitIcon';
+import I02BearIcon from '../elements/I02BearIcon';
 import BannerAd from '../components/BannerAd';
 
 const timer = require('react-native-timer');
@@ -25,6 +29,7 @@ class GameScreen extends React.Component {
       correctAnswer: '',
       answer: '',
       pointer: 0,
+      apperAnim: new Animated.Value(0),
     };
 
     this.level = this.props.navigation.state.params.level;
@@ -85,18 +90,38 @@ class GameScreen extends React.Component {
 
     if (this.state.questionHiragana.length === revisedPointer) {
       // 最後まで正解文字列を入力し終わったら、次の問題を読み込む
-      this.setQuestion();
-      this.setState({ correctAnswer: '' });
-      this.setState({ pointer: 0 });
+      Animated.timing(
+        this.state.apperAnim,
+        {
+          toValue: 1,
+          duration: 1000,
+        },
+      ).start(
+        () => {
+          Animated.timing(
+            this.state.apperAnim,
+            {
+              toValue: 0,
+              duration: 0,
+            },
+          ).start();
+          this.setQuestion();
+          this.setState({ correctAnswer: '' });
+          this.setState({ pointer: 0 });
+          this.setState(prevState => ({ count: prevState.count + 1 }));
+        },
+      );
     }
   }
 
   render() {
+    let { apperAnim } = this.state;
+
     return (
       <View style={styles.container}>
         <BannerAd />
 
-        <View style={styles.body}>
+        <KeyboardAvoidingView style={styles.body} behavior="height" enable>
           <Cloud style={{ left: 20, top: 35 }} />
           <Cloud style={{ right: 20, top: 65 }} />
           <Mountain />
@@ -114,7 +139,8 @@ class GameScreen extends React.Component {
               秒
             </Text>
           </View>
-          <View>
+
+          <View style={styles.qaArea}>
             <View style={styles.question}>
               <View style={styles.questionKanji}>
                 <Text style={styles.questionKanjiText}>
@@ -124,10 +150,12 @@ class GameScreen extends React.Component {
                 </Text>
               </View>
               <View style={styles.questionHiragana}>
-                <Text style={styles.questionHiraganaText}>
+                <Text style={styles.questionHiraganaText1}>
                   {/* 最大60字 */}
-                  {this.state.questionHiragana}
-                  {/* とくがわいえやすはせきがはらのたたかいにしょうりし、そのごえどばくふをひらいたてすとてすとてすとてすとてすとてすとてすと */}
+                  {this.state.questionHiragana.substr(0, this.state.pointer)}
+                  <Text style={styles.questionHiraganaText2}>
+                    {this.state.questionHiragana.substr(this.state.pointer)}
+                  </Text>
                 </Text>
               </View>
             </View>
@@ -141,8 +169,18 @@ class GameScreen extends React.Component {
                 value={this.state.correctAnswer + this.state.answer}
               />
             </View>
+
+            <Animated.View style={{ ...styles.circle, opacity: apperAnim }}>
+              <Text style={styles.circleText}>
+                ○
+              </Text>
+            </Animated.View>
           </View>
-        </View>
+
+          <I02BearIcon style={{ left: 20, bottom: 10 }} />
+          <I02BearIcon style={{ right: 20, bottom: 10 }} />
+
+        </KeyboardAvoidingView>
 
         <View style={styles.buttonArea}>
         </View>
@@ -180,40 +218,63 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'right',
   },
+  qaArea: {
+    height: 240,
+    width: 200,
+    marginTop: 20,
+  },
   question: {
     backgroundColor: 'rgba(255, 173, 50, 0.8)',
-    height: 200,
-    width: 200,
+    flex: 2,
+    width: '100%',
   },
   questionKanji: {
-    padding: 5,
+    padding: 3,
   },
   questionKanjiText: {
-    lineHeight: 20,
+    lineHeight: 18,
     fontSize: 16,
     textAlign: 'center',
   },
   questionHiragana: {
-    padding: 5,
+    padding: 3,
   },
-  questionHiraganaText: {
-    lineHeight: 20,
+  questionHiraganaText1: {
+    lineHeight: 18,
     fontSize: 15,
     textAlign: 'center',
+    color: '#0000ff',
+  },
+  questionHiraganaText2: {
+    color: '#000000',
   },
   answer: {
     backgroundColor: 'rgba(33, 183, 247, 0.8)',
-    height: 100,
-    width: 200,
-    padding: 5,
+    flex: 1,
+    width: '100%',
+    padding: 3,
   },
   answerText: {
     textAlign: 'center',
     fontSize: 15,
   },
+  circle: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent:
+    'center',
+    alignItems: 'center',
+  },
+  circleText: {
+    fontSize: 200,
+    color: '#ff0000',
+  },
   buttonArea: {
     backgroundColor: '#7FE21D',
-    flex: 3,
+    flex: 5,
   },
 });
 
