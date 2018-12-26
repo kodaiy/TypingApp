@@ -1,0 +1,16 @@
+{
+  "icon_status": [
+    {
+      "No": 0,
+      "class": "I00RabbitIcon",
+      "appeared": "Y",
+      "appearable": "Y"
+    },
+    {
+      "No": 1,
+      "class": "I01BearIcon",
+      "appeared": "Y",
+      "appearable": "Y"
+    }
+  ]
+}

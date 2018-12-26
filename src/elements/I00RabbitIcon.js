@@ -4,9 +4,9 @@ import {
   Image,
 } from 'react-native';
 
-const src = require('../../assets/pictures/02_bear_icon_50x100.png');
+const src = require('../../assets/pictures/00_rabbit_icon_50x100.png');
 
-class I02BearIcon extends React.Component {
+class I00RabbitIcon extends React.Component {
   render() {
     const { style } = this.props;
     return (
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default I02BearIcon;
+export default I00RabbitIcon;

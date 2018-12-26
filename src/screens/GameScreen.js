@@ -9,10 +9,11 @@ import {
 } from 'react-native';
 
 import QUESTIONS from '../../assets/data/questions.json';
+import ICON_STATUS from '../../assets/data/icon_status.json';
 import Cloud from '../elements/Cloud';
 import Mountain from '../elements/Mountain';
-import I01RabbitIcon from '../elements/I01RabbitIcon';
-import I02BearIcon from '../elements/I02BearIcon';
+import I00RabbitIcon from '../elements/I00RabbitIcon';
+import I01BearIcon from '../elements/I01BearIcon';
 import BannerAd from '../components/BannerAd';
 
 const timer = require('react-native-timer');
@@ -30,6 +31,8 @@ class GameScreen extends React.Component {
       answer: '',
       pointer: 0,
       apperAnim: new Animated.Value(0),
+      iconStatus: ICON_STATUS,
+      iconClass: '',
     };
 
     this.level = this.props.navigation.state.params.level;
@@ -37,6 +40,7 @@ class GameScreen extends React.Component {
   }
 
   componentDidMount() {
+    // タイマー設定
     timer.setInterval(
       this,
       'test',
@@ -49,7 +53,11 @@ class GameScreen extends React.Component {
       1000,
     );
 
+    // 問題データ読み込み
     this.setQuestion();
+
+    // キャラクターデータ読み込み
+    this.setIcon();
   }
 
   componentWillUnmount() {
@@ -62,6 +70,19 @@ class GameScreen extends React.Component {
       questionKanji: this.questionList[questionNo].question_kanji,
       questionHiragana: this.questionList[questionNo].question_hiragana,
     });
+  }
+
+  setIcon() {
+    // 出現可能なアイコンのリストを作成する
+    const appearableIconList = ICON_STATUS.icon_status.filter(q => q.appearable === 'Y');
+    // リストからランダムに1つを抽出し、No.1を取得する
+    const iconClass = appearableIconList[Math.floor(Math.random() * appearableIconList.length)].class;
+    this.setState({ iconClass });
+    // console.log(this.state.iconClass);
+    // テスト用
+    // let iconStatus = Object.assign({}, this.state.iconStatus);
+    // iconStatus.icon_status[0].No = 1;
+    // this.setState({ iconStatus });
   }
 
   inputAnswer(text) {
@@ -177,8 +198,8 @@ class GameScreen extends React.Component {
             </Animated.View>
           </View>
 
-          <I02BearIcon style={{ left: 20, bottom: 10 }} />
-          <I02BearIcon style={{ right: 20, bottom: 10 }} />
+          <I01BearIcon style={{ left: 20, bottom: 10 }} />
+          <I01BearIcon style={{ right: 20, bottom: 10 }} />
 
         </KeyboardAvoidingView>
 
