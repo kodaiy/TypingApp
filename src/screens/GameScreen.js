@@ -12,8 +12,7 @@ import QUESTIONS from '../../assets/data/questions.json';
 import ICON_STATUS from '../../assets/data/icon_status.json';
 import Cloud from '../elements/Cloud';
 import Mountain from '../elements/Mountain';
-import I00RabbitIcon from '../elements/I00RabbitIcon';
-import I01BearIcon from '../elements/I01BearIcon';
+import CharacterIcon from '../elements/CharacterIcon';
 import BannerAd from '../components/BannerAd';
 
 const timer = require('react-native-timer');
@@ -32,7 +31,7 @@ class GameScreen extends React.Component {
       pointer: 0,
       apperAnim: new Animated.Value(0),
       iconStatus: ICON_STATUS,
-      iconClass: '',
+      iconNo: -1,
     };
 
     this.level = this.props.navigation.state.params.level;
@@ -76,10 +75,10 @@ class GameScreen extends React.Component {
     // 出現可能なアイコンのリストを作成する
     const appearableIconList = ICON_STATUS.icon_status.filter(q => q.appearable === 'Y');
     // リストからランダムに1つを抽出し、No.1を取得する
-    const iconClass = appearableIconList[Math.floor(Math.random() * appearableIconList.length)].class;
-    this.setState({ iconClass });
-    // console.log(this.state.iconClass);
-    // テスト用
+    const iconNo = appearableIconList[Math.floor(Math.random() * appearableIconList.length)].No;
+    this.setState({ iconNo });
+
+    // iconStatusを書き換える記述。あとで使う
     // let iconStatus = Object.assign({}, this.state.iconStatus);
     // iconStatus.icon_status[0].No = 1;
     // this.setState({ iconStatus });
@@ -127,6 +126,9 @@ class GameScreen extends React.Component {
             },
           ).start();
           this.setQuestion();
+          // 一時テスト
+          this.setIcon();
+          // ここまで一時テスト
           this.setState({ correctAnswer: '' });
           this.setState({ pointer: 0 });
           this.setState(prevState => ({ count: prevState.count + 1 }));
@@ -198,8 +200,8 @@ class GameScreen extends React.Component {
             </Animated.View>
           </View>
 
-          <I01BearIcon style={{ left: 20, bottom: 10 }} />
-          <I01BearIcon style={{ right: 20, bottom: 10 }} />
+          <CharacterIcon iconNo={this.state.iconNo} style={{ left: 20, bottom: 10 }} />
+          <CharacterIcon iconNo={this.state.iconNo} style={{ right: 20, bottom: 10 }} />
 
         </KeyboardAvoidingView>
 
